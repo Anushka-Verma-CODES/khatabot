@@ -3,4 +3,4 @@ update_phone.py
 __pycache__/
 *.pyc
 config.py
-text.py
+help.py
