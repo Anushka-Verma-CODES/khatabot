@@ -1,0 +1,5 @@
+khatabot.db
+update_phone.py
+__pycache__/
+*.pyc
+config.py
