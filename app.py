@@ -62,20 +62,20 @@ def webhook():
 
         reply = f"Logged: {name} owes Rs.{amount:.0f} more. Total: Rs.{new_balance:.0f}"
 
-        # Send daily purchase notification to customer
-        if customer["phone"]:
-            messaging.send_message(
-                customer["phone"], customer["channel"],
-                messaging.msg_daily_purchase(name, amount, new_balance)
-            )
-
-        # Send additional limit exceeded alert if crossed
+        # Send daily purchase notification + alert to customer
+    
         if new_balance > customer["credit_limit"]:
             reply += f"\n⚠️ {name} has crossed the credit limit of Rs.{customer['credit_limit']:.0f}!"
             if customer["phone"]:
                 messaging.send_message(
                     customer["phone"], customer["channel"],
-                    messaging.msg_limit_exceeded(name, new_balance, customer["credit_limit"])
+                    messaging.msg_purchase_and_limit_exceeded(name, amount, new_balance, customer["credit_limit"])
+                )
+        else:
+            if customer["phone"]:
+                messaging.send_message(
+                    customer["phone"], customer["channel"],
+                    messaging.msg_daily_purchase(name, amount, new_balance)
                 )
 
         conn.close()

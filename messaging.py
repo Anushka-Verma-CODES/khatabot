@@ -61,15 +61,15 @@ def msg_payment_received(name, paid_amount, balance):
         f"Thank you for choosing {SHOP_NAME}."
     )
 
-def msg_limit_exceeded(name, balance, limit):
-    return (
-        f"Hello {name},\n"
-        f"⚠️ Credit Limit Alert\n"
-        f"Your total outstanding balance is ₹{balance:.0f}.\n"
-        f"This exceeds your credit limit of ₹{limit:.0f}.\n"
-        f"Please make a payment at your earliest convenience.\n"
-        f"Thank you for choosing {SHOP_NAME}."
-    )
+# def msg_limit_exceeded(name, balance, limit):
+#     return (
+#         f"Hello {name},\n"
+#         f"⚠️ Credit Limit Alert\n"
+#         f"Your total outstanding balance is ₹{balance:.0f}.\n"
+#         f"This exceeds your credit limit of ₹{limit:.0f}.\n"
+#         f"Please make a payment at your earliest convenience.\n"
+#         f"Thank you for choosing {SHOP_NAME}."
+#     )
 
 def msg_month_end(name, balance):
     return (
@@ -77,5 +77,16 @@ def msg_month_end(name, balance):
         f"📋 Monthly Balance Reminder ({datetime.now().strftime('%B %Y')})\n"
         f"Total Outstanding Balance: ₹{balance:.0f}\n"
         f"Please clear your outstanding balance at your earliest convenience.\n"
+        f"Thank you for choosing {SHOP_NAME}."
+    )
+
+def msg_purchase_and_limit_exceeded(name, amount, balance, limit):
+    return (
+        f"Hello {name},\n"
+        f"⚠️ Credit Limit Alert ({datetime.now().strftime('%d %b %Y')})\n"
+        f"Today's Purchase: ₹{amount:.0f}\n"
+        f"Total Outstanding Balance: ₹{balance:.0f}\n"
+        f"Your balance has exceeded your credit limit of ₹{limit:.0f}.\n"
+        f"Please make a payment at your earliest convenience.\n"
         f"Thank you for choosing {SHOP_NAME}."
     )
