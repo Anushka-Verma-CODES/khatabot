@@ -62,11 +62,21 @@ def webhook():
 
         reply = f"Logged: {name} owes Rs.{amount:.0f} more. Total: Rs.{new_balance:.0f}"
 
+        # Send daily purchase notification to customer
+        if customer["phone"]:
+            messaging.send_message(
+                customer["phone"], customer["channel"],
+                messaging.msg_daily_purchase(name, amount, new_balance)
+            )
+
+        # Send additional limit exceeded alert if crossed
         if new_balance > customer["credit_limit"]:
             reply += f"\n⚠️ {name} has crossed the credit limit of Rs.{customer['credit_limit']:.0f}!"
             if customer["phone"]:
-                alert = f"Dear {name}, your outstanding balance at Jitender & Brothers is Rs.{new_balance:.0f}, which has exceeded your credit limit of Rs.{customer['credit_limit']:.0f}. Please clear your dues soon."
-                messaging.send_message(customer["phone"], customer["channel"], alert)
+                messaging.send_message(
+                    customer["phone"], customer["channel"],
+                    messaging.msg_limit_exceeded(name, new_balance, customer["credit_limit"])
+                )
 
         conn.close()
         resp.message(reply)
@@ -98,23 +108,19 @@ def webhook():
 
     return str(resp)
 
-def send_daily_summaries():
-    conn = db.get_db()
-    customers = conn.execute(
-        "SELECT * FROM customers WHERE phone IS NOT NULL AND balance > 0"
-    ).fetchall()
-    conn.close()
-    for customer in customers:
-        msg = f"Hi {customer['name']}, your current outstanding balance at Jitender & Brothers is Rs.{customer['balance']:.0f}. Please clear your dues at your earliest convenience."
-        messaging.send_message(customer["phone"], customer["channel"], msg)
-
 def send_month_end_reminders():
     today = datetime.now()
     if today.day == 28:
-        send_daily_summaries()
+        conn = db.get_db()
+        customers = conn.execute(
+            "SELECT * FROM customers WHERE phone IS NOT NULL AND balance > 0"
+        ).fetchall()
+        conn.close()
+        for customer in customers:
+            msg = messaging.msg_month_end(customer["name"], customer["balance"])
+            messaging.send_message(customer["phone"], customer["channel"], msg)
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(send_daily_summaries, "cron", hour=20, minute=0)
 scheduler.add_job(send_month_end_reminders, "cron", hour=9, minute=0)
 scheduler.start()
 

@@ -1,8 +1,11 @@
 from twilio.rest import Client
 import requests
 import config
+from datetime import datetime
 
 client = Client(config.TWILIO_ACCOUNT_SID, config.TWILIO_AUTH_TOKEN)
+
+SHOP_NAME = "Jitender and Brothers"
 
 def send_whatsapp(to_number, message):
     try:
@@ -38,3 +41,41 @@ def send_message(phone, channel, message):
         send_whatsapp(phone, message)
     else:
         send_sms(phone, message)
+
+def msg_daily_purchase(name, amount, balance):
+    return (
+        f"Hello {name},\n"
+        f"🛒 Purchase Update ({datetime.now().strftime('%d %b %Y')})\n"
+        f"Today's Purchase: ₹{amount:.0f}\n"
+        f"Total Outstanding Balance: ₹{balance:.0f}\n"
+        f"Thank you for choosing {SHOP_NAME}."
+    )
+
+def msg_payment_received(name, paid_amount, balance):
+    return (
+        f"Hello {name},\n"
+        f"✅ Payment Received ({datetime.now().strftime('%d %b %Y')})\n"
+        f"Payment Received: ₹{paid_amount:.0f}\n"
+        f"Total Outstanding Balance: ₹{balance:.0f}\n"
+        f"We appreciate your payment.\n"
+        f"Thank you for choosing {SHOP_NAME}."
+    )
+
+def msg_limit_exceeded(name, balance, limit):
+    return (
+        f"Hello {name},\n"
+        f"⚠️ Credit Limit Alert\n"
+        f"Your total outstanding balance is ₹{balance:.0f}.\n"
+        f"This exceeds your credit limit of ₹{limit:.0f}.\n"
+        f"Please make a payment at your earliest convenience.\n"
+        f"Thank you for choosing {SHOP_NAME}."
+    )
+
+def msg_month_end(name, balance):
+    return (
+        f"Hello {name},\n"
+        f"📋 Monthly Balance Reminder ({datetime.now().strftime('%B %Y')})\n"
+        f"Total Outstanding Balance: ₹{balance:.0f}\n"
+        f"Please clear your outstanding balance at your earliest convenience.\n"
+        f"Thank you for choosing {SHOP_NAME}."
+    )
