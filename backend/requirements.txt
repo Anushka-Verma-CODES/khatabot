@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+twilio
+apscheduler
+requests
+python-dotenv
+jinja2
+python-multipart

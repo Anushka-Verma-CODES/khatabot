@@ -1,0 +1,19 @@
+# env
+.env
+backend/.env
+
+# db
+backend/khatabot.db
+
+# python
+__pycache__/
+*.pyc
+khatabot_env/
+
+# node
+frontend/node_modules/
+frontend/.next/
+
+config.py
+
+*.db
